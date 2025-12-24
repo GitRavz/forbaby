@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Shaye</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 50%, #1a0033 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            animation: fadeInBackground 3s ease-in forwards;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            animation: fadeOut 3s ease-in forwards;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .birthday-text {
+            font-size: 4em;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: glow 2s ease-in-out infinite 3s, fadeIn 2s ease-in 3s;
+            text-shadow: 
+                0 0 10px #b19cd9,
+                0 0 20px #b19cd9,
+                0 0 30px #9b6bb8,
+                0 0 40px #9b6bb8,
+                0 0 50px #8b5aa8,
+                0 0 60px #8b5aa8;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        .hydrangea-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            animation: floatIn 2s ease-out 3s forwards;
+            opacity: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .hydrangea-container:hover {
+            transform: scale(1.05);
+        }
+
+        .message-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .message-modal.show {
+            display: flex;
+        }
+
+        .message-content {
+            background: linear-gradient(135deg, #e8d5f2 0%, #d4b5f0 100%);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 50px rgba(155, 89, 182, 0.5);
+            position: relative;
+            animation: slideIn 0.5s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            color: #6a4c7a;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+            padding: 5px 10px;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #4a3a5a;
+        }
+
+        .message-text {
+            color: #4a3a5a;
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: center;
+            white-space: pre-line;
+        }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-frame {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(106, 76, 122, 0.3);
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.8) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .glow-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(155, 89, 182, 0.4) 0%, rgba(155, 89, 182, 0.1) 40%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .glow-circle2 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(142, 68, 173, 0.3) 0%, rgba(142, 68, 173, 0.05) 50%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite 0.5s;
+        }
+
+        .flower-cluster {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+        }
+
+        .petal {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50% 50% 0 50%;
+            opacity: 0;
+            animation: petalBloom 1.5s ease-out forwards;
+            filter: drop-shadow(0 0 8px rgba(155, 89, 182, 0.8));
+        }
+
+        .center-gem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #fff 0%, #e8d5f2 50%, #9b59b6 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 10px #fff,
+                0 0 20px #b19cd9,
+                0 0 30px #9b59b6;
+            animation: gemGlow 2s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        .stem {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            width: 6px;
+            height: 100px;
+            background: linear-gradient(to bottom, #6a4c7a, #4a3a5a);
+            transform: translateX(-50%);
+            transform-origin: top;
+            animation: growStem 2s ease-out forwards;
+            box-shadow: 0 0 10px rgba(106, 76, 122, 0.5);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 35px;
+            height: 20px;
+            background: linear-gradient(135deg, #6a4c7a 0%, #4a3a5a 100%);
+            border-radius: 0 50% 50% 0;
+            transform-origin: left;
+            box-shadow: 0 0 8px rgba(106, 76, 122, 0.5);
+        }
+
+        .leaf.left {
+            left: -35px;
+            top: 40px;
+            transform: rotate(-40deg);
+            animation: leafGrow 1.5s ease-out 4.5s forwards;
+            opacity: 0;
+        }
+
+        .leaf.right {
+            right: -35px;
+            top: 60px;
+            transform: rotate(180deg) rotate(-40deg);
+            animation: leafGrow 1.5s ease-out 4.8s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes fadeInBackground {
+            0% { filter: brightness(0); }
+            100% { filter: brightness(1); }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px #b19cd9,
+                    0 0 20px #b19cd9,
+                    0 0 30px #9b6bb8,
+                    0 0 40px #9b6bb8,
+                    0 0 50px #8b5aa8,
+                    0 0 60px #8b5aa8;
+            }
+            50% {
+                text-shadow: 
+                    0 0 20px #d4b5f0,
+                    0 0 30px #d4b5f0,
+                    0 0 40px #b19cd9,
+                    0 0 50px #b19cd9,
+                    0 0 70px #9b6bb8,
+                    0 0 80px #9b6bb8;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floatIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes petalBloom {
+            from { 
+                transform: scale(0) rotate(0deg); 
+                opacity: 0; 
+            }
+            to { 
+                transform: scale(1) rotate(var(--rotation)); 
+                opacity: 0.95; 
+            }
+        }
+
+        @keyframes gemGlow {
+            0%, 100% {
+                box-shadow: 
+                    0 0 10px #fff,
+                    0 0 20px #b19cd9,
+                    0 0 30px #9b59b6;
+            }
+            50% {
+                box-shadow: 
+                    0 0 20px #fff,
+                    0 0 30px #d4b5f0,
+                    0 0 40px #b19cd9,
+                    0 0 50px #9b59b6;
+            }
+        }
+
+        @keyframes growStem {
+            from { height: 0; }
+            to { height: 100px; }
+        }
+
+        @keyframes leafGrow {
+            from { opacity: 0; transform: scale(0) rotate(var(--leaf-rotation)); }
+            to { opacity: 1; transform: scale(1) rotate(var(--leaf-rotation)); }
+        }
+
+        @media (max-width: 768px) {
+            .birthday-text {
+                font-size: 2.5em;
+                margin-bottom: 30px;
+            }
+            .hydrangea-container {
+                width: 250px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="birthday-text">
+        Happy Birthday Shaye
+    </div>
+
+    <div class="hydrangea-container" id="hydrangea">
+        <div class="glow-circle2"></div>
+        <div class="glow-circle"></div>
+        
+        <div class="flower-cluster" id="flower">
+            <div class="center-gem"></div>
+        </div>
+
+        <div class="stem">
+            <div class="leaf left"></div>
+            <div class="leaf right"></div>
+        </div>
+    </div>
+
+    <div class="message-modal" id="modal">
+        <div class="message-content">
+            <button class="close-btn" id="closeBtn">&times;</button>
+            
+            <div class="message-text" id="messageText">
+Happy birthday, Shayeee.
+No words can fully describe how I feel since the day we met. I’m really happy and grateful to be with you on your special day.
+I’ll always be here for you, supporting you, caring for you, and yes, always being your ‘source of madness’  💜
+            </div>
+
+            <div class="photo-gallery">
+                <div class="photo-frame">
+                    <img src="../HB/img/img1.jpg" alt="Us">
+                </div>
+                <div class="photo-frame">
+                    <img src="../HB/img/img2.jpg" alt="Us">
+                    
+                </div>
+                <div class="photo-frame">
+                    <img src="../HB/img/img3.jpg" alt="Us">
+                   
+                </div>
+                <div class="photo-frame">
+                    <img src="../HB/img/img4.jpg" alt="Us">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const purpleShades = [
+            '#9B59B6', '#8E44AD', '#B19CD9', '#A569BD',
+            '#BB8FCE', '#7D3C98', '#AF7AC5', '#9980B5',
+            '#8B5AA8', '#7E4A9E', '#C39BD3', '#D7BDE2'
+        ];
+
+        const flower = document.getElementById('flower');
+        
+        const petalPositions = [
+            {x: 80, y: 40, r: 0, d: 0.2},
+            {x: 110, y: 50, r: 30, d: 0.3},
+            {x: 130, y: 80, r: 60, d: 0.4},
+            {x: 130, y: 110, r: 90, d: 0.5},
+            {x: 110, y: 140, r: 120, d: 0.6},
+            {x: 80, y: 150, r: 150, d: 0.7},
+            {x: 50, y: 140, r: 180, d: 0.8},
+            {x: 30, y: 110, r: 210, d: 0.9},
+            {x: 30, y: 80, r: 240, d: 1.0},
+            {x: 50, y: 50, r: 270, d: 1.1},
+            {x: 90, y: 70, r: 315, d: 0.25},
+            {x: 110, y: 90, r: 45, d: 0.35},
+            {x: 100, y: 110, r: 90, d: 0.45},
+            {x: 70, y: 110, r: 135, d: 0.55},
+            {x: 60, y: 90, r: 180, d: 0.65},
+            {x: 70, y: 70, r: 225, d: 0.75}
+        ];
+
+        petalPositions.forEach((pos, i) => {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = pos.x + 'px';
+            petal.style.top = pos.y + 'px';
+            petal.style.background = purpleShades[i % purpleShades.length];
+            petal.style.setProperty('--rotation', pos.r + 'deg');
+            petal.style.animationDelay = (3 + pos.d) + 's';
+            flower.appendChild(petal);
+        });
+
+        const leftLeaf = document.querySelector('.leaf.left');
+        const rightLeaf = document.querySelector('.leaf.right');
+        leftLeaf.style.setProperty('--leaf-rotation', '-40deg');
+        rightLeaf.style.setProperty('--leaf-rotation', '140deg');
+
+        // Modal functionality
+        const hydrangea = document.getElementById('hydrangea');
+        const modal = document.getElementById('modal');
+        const closeBtn = document.getElementById('closeBtn');
+
+        hydrangea.addEventListener('click', () => {
+            modal.classList.add('show');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
